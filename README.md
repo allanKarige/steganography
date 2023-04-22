@@ -6,3 +6,5 @@ each word was in the green pixels entirely.Ofcourse it could be simplified,howev
 The main functions are encode and decode functions.
 This project was inspired by the popular youtube channel computerphile where a video about this was done.
 The limit of the message which can be sent depends on the number of pixels in the image.
+
+Ignore the contents of the program to be executed.The image mentioned is not provided.
