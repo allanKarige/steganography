@@ -88,6 +88,17 @@ def msg_data2string(message_data, mags):
     return msg
 
 
+def to_pixels(num):
+    res = num // 255
+    modulo = num % 255
+    fin = []
+    for i in range(res):
+        fin.append(255)
+    fin.append(modulo)
+
+    return fin
+
+
 def encode(image, msg):
     img = Image.open(image)
     msg_bit_list, mag = string_to_bits(msg)
@@ -114,8 +125,14 @@ def encode(image, msg):
     for i in range(len(encoded_red_pixels)):
         pixels1[i][0] = encoded_red_pixels[i]
 
-    pixels1[-1][0] = len(mag)
-    for j in range(len(mag)):
+    number_of_words = len(mag)
+    word_list = to_pixels(number_of_words)
+    for i in range(len(word_list)):
+        j = i + 1
+        pixels1[-j][0] = word_list[i]
+    pixels1[-1][2] = len(word_list)
+
+    for j in range(number_of_words):
         pixels1[j][2] = mag[j]
 
     pixels2 = conv2tuple(pixels1)
@@ -128,11 +145,15 @@ def decode(image):
     img = Image.open(image)
     pixels0 = list(img.getdata())
 
+    word_list = []
+    for i in range(pixels0[-1][2]):
+        j = i + 1
+        word_list.append(pixels0[-j][0])
+
+    number_of_words = get_sum(word_list)
     mag = []
-    i = 0
-    for pixel in range(pixels0[-1][0]):
-        mag.append(pixels0[i][2])
-        i += 1
+    for p in range(number_of_words):
+        mag.append(pixels0[p][2])
 
     length = get_sum(mag)
     total_digits = int(length)
@@ -153,5 +174,4 @@ def decode(image):
 
 
 if __name__ == '__main__':
-    print(decode('zhara.png'))
-
+    print(decode('to_beauty.png'))
